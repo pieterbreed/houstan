@@ -1,4 +1,4 @@
-(defproject pieterbreed/houstan "0.1.0-SNAPSHOT"
+(defproject pieterbreed/houstan "0.9.0-SNAPSHOT"
   :description "An environment operations protocol. A tool."
   :url "https://github.com/pieterbreed/houstan"
   :license {:name "Eclipse Public License"
