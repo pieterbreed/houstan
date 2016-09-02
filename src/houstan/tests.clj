@@ -2,22 +2,16 @@
   (:require [clojure.test :refer :all]
             [clojure.test.tap :refer :all]
             [clojure.string :as str]
-            [me.raynes.conch :as sh]
-            [environ.core :refer [env]]))
+            [environ.core :refer [env]]
+            [houstan.vagrant :refer [vagrant]]
+            [houstan.ansible :refer [ansible]]
+            [houstan.git :refer [git]]))
 
 ;; I use this to verify if the tooling behaves like expected
 (deftest this-time-its-serious
   (is true))
-  ;;(is false))
+;;(is false))
 
-;; ----------------------------------------
-
-;; this baby imports shell applications into the current namespace
-;; window-dressing them to look like functions in clojure
-(sh/programs vagrant
-             ansible
-             git
-             )
 
 ;; ----------------------------------------
 

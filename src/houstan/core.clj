@@ -11,11 +11,7 @@
 
 (defn usage [options-summary]
   (->> [(str "Houstan. "
-             (->> #{"A practical joke."
-                    "A funny incident."
-                    "The Clear Light of the Void."
-                    "The Yin and the Yan of This."
-                    "This and That."}
+             (->> #{"A practical joke." "A funny incident." "Tao (of) Tea ching." "A bout of honesty." "The Clear Light of the Void." "The Yin and the Yan." "This and That."}
                   (sort-by (fn [& _]
                              (rand-int Integer/MAX_VALUE)))
                   first))
@@ -39,7 +35,7 @@
 
   Young Padawan, it's your job to make this work without needing to make changes to this file."
   [& _]
-  (or (as-> (resolve 'you-need-to-define-this-value) $
+  (or (as-> (resolve 'you-need-to-define-this-value-too) $
         (when-let [v $]
           (deref v)))
       false))
