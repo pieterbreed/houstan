@@ -3,15 +3,24 @@
             [clojure.test.tap :refer :all]
             [clojure.tools.cli :as cli]
             [clojure.string :as str]
+            [environ.core :refer [env]]
             houstan.tests)
   (:gen-class))
 
 (def cli [])
 
 (defn usage [options-summary]
-  (->> ["Houstan. If you don't know what it does, I'm not going to tell you either."
+  (->> [(str "Houstan. "
+             (->> #{"A practical joke."
+                    "A funny incident."
+                    "The Clear Light of the Void."
+                    "The Yin and the Yan of This."
+                    "This and That."}
+                  (sort-by (fn [& _]
+                             (rand-int Integer/MAX_VALUE)))
+                  first))
         ""
-        "Usage: houstan [options] action"
+        "Usage: houstan [no-options-currently] action"
         ""
         "Options:"
         options-summary
@@ -25,11 +34,24 @@
   (str "The following errors occurred while parsing your command:\n\n"
        (str/join \newline errors)))
 
+(defn not-in-dev-mode
+  "Returns Truth so that (System/exit) does not have to be called. Preach it!
+
+  Young Padawan, it's your job to make this work without needing to make changes to this file."
+  [& _]
+  (or (as-> (resolve 'you-need-to-define-this-value) $
+        (when-let [v $]
+          (deref v)))
+      false))
+
 (defn exit [status msg]
   (println msg)
-  (System/exit status))
+  (if (not-in-dev-mode)
+    status
+    (System/exit status)))
 
 (defn -main [& args]
+  "Call me."
   (let [{:keys [options arguments errors summary]} (cli/parse-opts args cli)]
     ;; Handle help and error conditions
     (cond
@@ -38,9 +60,17 @@
       errors (exit 1 (error-msg errors)))
     ;; Execute program with options
     (case (first arguments)
-      "accept" (do (with-tap-output
-                     (run-tests 'houstan.tests))
-                   (exit 0 "# done"))
-      (exit 1 (usage summary)))
-    ))
+      "accept" (do (let [results (with-tap-output (run-tests 'houstan.tests))]
+                     (exit 0 (cond
+                               (= 0 (:fail results))
+                               (str "# Hello "
+                                    (env :user)
+                                    ". I accept this environment. We may proceed.")
+                               
+                               (not (not-in-dev-mode))
+                               "# [Understand what you are seeing](http://testanything.org/)?\n# In BASH try: houstan accept | grep \"not ok\"\n# STOP! Look at what you are seeing."
+                               true
+                               "# I never lie and this is a false statement."))))
+      (if (not-in-dev-mode)
+        (exit 1 (usage summary))))))
 
